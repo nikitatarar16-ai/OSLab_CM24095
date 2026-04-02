@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OS Project - SSTF</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+            color: white;
+            text-align: center;
+        }
+
+        .box {
+            margin-top: 100px;
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,255,200,0.3);
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px;
+            width: 85%;
+            border-radius: 6px;
+            border: none;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #00c9a7;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #00ffcc;
+        }
+
+        #mainPage {
+            display: none;
+        }
+    </style>
+
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div class="box" id="loginPage">
+    <h2>🔐 Login Page</h2>
+
+    <input type="text" id="user" placeholder="Enter Username"><br>
+    <input type="password" id="pass" placeholder="Enter Password"><br>
+
+    <button onclick="login()">Login</button>
+
+    <p>(Use: admin / 123)</p>
+</div>
+
+<!-- MAIN PAGE -->
+<div class="box" id="mainPage">
+    <h2>💻 SSTF Disk Scheduling</h2>
+
+    <input id="req" placeholder="Enter Requests"><br>
+    <input id="head" placeholder="Enter Head"><br>
+
+    <button onclick="run()">Calculate</button>
+
+    <h3 id="ans"></h3>
+</div>
+
+<script>
+
+// LOGIN FUNCTION (FIXED)
+function login(){
+    let u = document.getElementById("user").value;
+    let p = document.getElementById("pass").value;
+
+    if(u === "admin" && p === "123"){
+        document.getElementById("loginPage").style.display = "none";
+        document.getElementById("mainPage").style.display = "block";
+    } 
+    else {
+        alert("❌ Wrong Username or Password");
+    }
+}
+
+// SSTF FUNCTION (WORKING)
+function run(){
+
+    let input = document.getElementById("req").value;
+    let head = parseInt(document.getElementById("head").value);
+
+    if(input === "" || isNaN(head)){
+        alert("Enter valid input");
+        return;
+    }
+
+    let arr = input.split(",").map(Number);
+
+    let total = 0;
+    let seq = [];
+
+    while(arr.length > 0){
+
+        let min = arr[0];
+        let index = 0;
+
+        for(let i=0;i<arr.length;i++){
+            if(Math.abs(arr[i] - head) < Math.abs(min - head)){
+                min = arr[i];
+                index = i;
+            }
+        }
+
+        total += Math.abs(min - head);
+        head = min;
+        seq.push(min);
+
+        arr.splice(index,1);
+    }
+
+    document.getElementById("ans").innerHTML =
+        "Sequence: " + seq.join(" → ") +
+        "<br>Total Head Movement: " + total;
+}
+
+</script>
+
+</body>
+</html>
